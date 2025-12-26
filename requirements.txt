@@ -1,0 +1,34 @@
+# Construct 3 RAG Assistant Dependencies
+
+# PDF Processing
+PyMuPDF>=1.23.0
+pdfplumber>=0.10.0
+
+# RAG Framework
+langchain>=0.1.0
+langchain-community>=0.0.10
+
+# Vector Database
+qdrant-client>=1.7.0
+
+# Embeddings
+sentence-transformers>=2.2.0
+FlagEmbedding>=1.2.0
+
+# LLM Integration
+openai>=1.0.0
+ollama>=0.1.0
+
+# Web Interface
+gradio>=4.0.0
+fastapi>=0.108.0
+uvicorn>=0.25.0
+
+# Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+tqdm>=4.66.0
+
+# Utilities
+python-dotenv>=1.0.0
+pydantic>=2.0.0
