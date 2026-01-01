@@ -7,6 +7,7 @@
 - **文档问答**: 回答 Construct 3 使用相关问题，并标注来源
 - **术语翻译**: 中英术语查询，保持与官方翻译一致
 - **代码生成**: 根据需求生成 Construct 3 事件表代码
+- **ACE 参考**: 查询插件/行为的 Actions、Conditions、Expressions
 
 ---
 
@@ -102,23 +103,47 @@ RAG 就像给 AI 配了一个**即时查阅资料库的能力**。
 
 ---
 
-## 数据与向量集合
+## 数据源
+
+所有数据来自以下仓库/文件，需放在同级目录：
+
+```
+Parent Directory/
+├── Construct3-LLM/                    # 本项目
+│   └── source/
+│       ├── zh-CN_R466.csv             # 官方翻译文件 (从 Construct 3 导出)
+│       └── Construct3-Schema/         # ACE Schema (自动生成)
+│
+├── Construct3-Manual/                 # 官方手册 Markdown 版
+│   ├── Construct3-Manual/             # 手册文档 (334 文件)
+│   └── Construct3-Addon-SDK/          # SDK 文档 (62 文件)
+│
+└── Construct-Example-Projects-main/   # 官方示例项目
+    └── example-projects/              # 示例项目 (490 个)
+```
+
+| 数据源 | 获取方式 | 用途 |
+|--------|----------|------|
+| `zh-CN_R466.csv` | Construct 3 编辑器 → 菜单 → 语言 → 导出翻译 | 术语翻译 + ACE Schema 生成 |
+| `Construct3-Manual` | [Construct-3-Manual](https://github.com/AshleyScirra/Construct-3-Manual) | 官方手册 Markdown |
+| `Construct-Example-Projects` | [Construct-Example-Projects](https://github.com/AshleyScirra/Construct-Example-Projects) | 官方示例项目 |
+
+---
+
+## 向量集合
 
 ### 文档集合
 
-来源：`../Construct3-Manual/` (334 个 Markdown 文件)
+来源：`../Construct3-Manual/Construct3-Manual/`
 
 | 集合 | 源目录 | 内容 |
 |------|--------|------|
-| `c3_guide` | `getting-started/` | 入门教程 |
-|            | `overview/` | 概述 |
-|            | `tips-and-guides/` | 技巧指南 |
-| `c3_interface` | `interface/` | 编辑器界面、工具栏、对话框、调试器 |
+| `c3_guide` | `getting-started/`, `overview/`, `tips-and-guides/` | 入门教程、概述、技巧 |
+| `c3_interface` | `interface/` | 编辑器界面、工具栏、对话框 |
 | `c3_project` | `project-primitives/` | 事件、对象、时间轴、流程图 |
-| `c3_plugins` | `plugin-reference/` | 插件参考 |
-| `c3_behaviors` | `behavior-reference/` | 行为参考 |
-|                | `system-reference/` | 系统参考 |
-| `c3_scripting` | `scripting/` | 脚本 API |
+| `c3_plugins` | `plugin-reference/` | 插件参考 (65 个) |
+| `c3_behaviors` | `behavior-reference/`, `system-reference/` | 行为参考 (31 个) |
+| `c3_scripting` | `scripting/` | JavaScript/TypeScript API |
 
 <details>
 <summary><b>插件子分类</b></summary>
@@ -150,8 +175,25 @@ RAG 就像给 AI 配了一个**即时查阅资料库的能力**。
 
 | 集合 | 来源 | 内容 |
 |------|------|------|
-| `c3_terms` | `source/zh-CN_R466.csv` | 官方术语翻译 (23,513 条) |
-| `c3_examples` | `../Construct-Example-Projects-main/` | 示例项目代码 (490 个) |
+| `c3_terms` | `source/zh-CN_R466.csv` | 官方术语翻译 (23,255 条) |
+| `c3_examples` | `../Construct-Example-Projects-main/example-projects/` | 示例事件 (490 项目, 7,148 事件) |
+
+### ACE Schema
+
+从 `zh-CN_R466.csv` 自动生成的结构化 ACE 数据：
+
+```
+source/Construct3-Schema/
+├── index.json          # 概要索引
+├── plugins.json        # 65 插件 ACE 列表
+├── behaviors.json      # 31 行为 ACE 列表
+├── zh/plugins/*.json   # 中文完整文件 (含参数)
+├── zh/behaviors/*.json
+├── en/plugins/*.json   # 英文完整文件
+└── en/behaviors/*.json
+```
+
+**统计**: 2,701 ACE (716 条件 + 965 动作 + 1,020 表达式)
 
 ---
 
@@ -171,25 +213,35 @@ RAG 就像给 AI 配了一个**即时查阅资料库的能力**。
 ## 快速开始
 
 ```bash
-# 1. 克隆相关仓库
-git clone <this-repo>
-git clone <Construct3-Manual-repo>  # 放在同级目录
+# 1. 克隆相关仓库 (放在同级目录，见「数据源」章节)
+git clone https://github.com/<your-fork>/Construct3-LLM.git
+git clone https://github.com/AshleyScirra/Construct-3-Manual.git Construct3-Manual
+git clone https://github.com/AshleyScirra/Construct-Example-Projects.git Construct-Example-Projects-main
 
 # 2. 安装依赖
+cd Construct3-LLM
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
-# 3. 启动 Qdrant
-docker run -d -p 6333:6333 qdrant/qdrant
+# 3. 启动 Qdrant (Docker)
+docker run -d -p 6333:6333 -v qdrant_storage:/qdrant/storage qdrant/qdrant
 
 # 4. 安装 Ollama 并拉取模型
-ollama pull qwen3:30b
+ollama pull qwen2.5:7b   # 或 qwen3:30b (更强但更慢)
 
-# 5. 索引数据
+# 5. 生成 ACE Schema (可选，已包含在仓库中)
+python -m src.data_processing.csv_schema_generator
+
+# 6. 索引数据 (首次约需 5 分钟)
 python -m src.data_processing.indexer --rebuild
 
-# 6. 启动 Web 界面
+# 7. 启动 Web 界面
 python -m src.app.gradio_ui
 ```
+
+> **注意**: 向量数据库数据保存在 Docker volume 中，不包含在 Git 仓库内。
+> 首次使用需执行 `--rebuild` 重建索引。
 
 ---
 
@@ -204,6 +256,7 @@ Construct3-LLM/
 │   │   ├── markdown_parser.py # Markdown 解析 + H2 分块
 │   │   ├── csv_parser.py      # 术语表解析
 │   │   ├── project_parser.py  # 示例项目解析
+│   │   ├── csv_schema_generator.py  # ACE Schema 生成器
 │   │   └── indexer.py         # 向量索引
 │   ├── rag/
 │   │   ├── retriever.py       # 多集合检索
@@ -211,15 +264,10 @@ Construct3-LLM/
 │   │   └── prompts.py         # 提示词模板
 │   └── app/
 │       └── gradio_ui.py       # Web 界面
-├── doc/
-│   └── guides/
-│       └── rag-introduction.md # RAG 详细原理讲解
-├── source/                    # 数据文件
+├── doc/guides/
+│   └── rag-introduction.md    # RAG 详细原理讲解
+├── source/                    # 数据文件 (见「数据源」章节)
 └── requirements.txt
-
-../Construct3-Manual/          # 外部仓库 (Markdown 文档)
-├── Construct3-Manual/         # 手册 (334 文件)
-└── Construct3-Addon-SDK/      # SDK 文档 (62 文件)
 ```
 
 ## 关键组件
@@ -229,10 +277,27 @@ Construct3-LLM/
 | 配置 | `config.py` | 模型路径、数据库地址 |
 | 集合定义 | `collections.py` | 向量集合名称、目录映射、子分类 |
 | 解析器 | `markdown_parser.py` | Markdown → 小块文本 |
+| Schema 生成 | `csv_schema_generator.py` | CSV → ACE Schema JSON |
 | 索引器 | `indexer.py` | 文本 → 向量 → 存入 Qdrant |
 | 检索器 | `retriever.py` | 问题 → 向量 → 搜索相似文档 |
 | 生成链 | `chain.py` | 组合检索结果 + LLM 生成回答 |
 | 界面 | `gradio_ui.py` | Web 交互界面 |
+
+### 向量数据库统计
+
+索引完成后的向量数量：
+
+| 集合 | 向量数 | 内容 |
+|------|--------|------|
+| c3_guide | 121 | 入门教程 |
+| c3_interface | 146 | 编辑器界面 |
+| c3_project | 136 | 项目元素 |
+| c3_plugins | 420 | 插件参考 |
+| c3_behaviors | 156 | 行为参考 |
+| c3_scripting | 201 | 脚本 API |
+| c3_terms | 23,255 | 术语翻译 |
+| c3_examples | 7,148 | 示例代码 |
+| **总计** | **31,583** | |
 
 ---
 
