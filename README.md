@@ -102,26 +102,56 @@ RAG 就像给 AI 配了一个**即时查阅资料库的能力**。
 
 ---
 
-## 数据来源
+## 数据与向量集合
 
-| 来源 | 说明 |
+### 文档集合
+
+来源：`../Construct3-Manual/` (334 个 Markdown 文件)
+
+| 集合 | 源目录 | 内容 |
+|------|--------|------|
+| `c3_guide` | `getting-started/` | 入门教程 |
+|            | `overview/` | 概述 |
+|            | `tips-and-guides/` | 技巧指南 |
+| `c3_interface` | `interface/` | 编辑器界面、工具栏、对话框、调试器 |
+| `c3_project` | `project-primitives/` | 事件、对象、时间轴、流程图 |
+| `c3_plugins` | `plugin-reference/` | 插件参考 |
+| `c3_behaviors` | `behavior-reference/` | 行为参考 |
+|                | `system-reference/` | 系统参考 |
+| `c3_scripting` | `scripting/` | 脚本 API |
+
+<details>
+<summary><b>插件子分类</b></summary>
+
+| 分类 | 插件 |
 |------|------|
-| `../Construct3-Manual/` | Markdown 格式手册 (334 文件) |
-| `source/zh-CN_R466.csv` | 编辑器中英翻译词条 (23,513 条) |
-| `../Construct-Example-Projects-main/` | 官方示例项目 (490 个) |
+| 3D | 3D camera, 3D shape |
+| Data & storage | Array, Binary Data, Dictionary, JSON, Local storage, XML... |
+| General | Sprite, Text, Particles, Tilemap, Timeline controller... |
+| HTML elements | Button, Text input, List, Slider bar... |
+| Input | Keyboard, Mouse, Touch, Gamepad |
+| Media | Audio, Video recorder, Speech synthesis... |
+| Web | AJAX, Browser, Multiplayer, WebSocket... |
 
-## 向量集合
+</details>
 
-| 集合 | 内容 |
+<details>
+<summary><b>行为子分类</b></summary>
+
+| 分类 | 行为 |
 |------|------|
-| `c3_guide` | 入门教程 + 概述 + 技巧指南 |
-| `c3_interface` | 编辑器界面 (工具栏/对话框/调试器) |
-| `c3_project` | 项目元素 (事件/对象/时间轴) |
-| `c3_plugins` | 插件参考 (Sprite/Audio/Array 等) |
-| `c3_behaviors` | 行为参考 (Platform/Physics/Tween 等) |
-| `c3_scripting` | 脚本 API (JavaScript/TypeScript) |
-| `c3_terms` | 官方术语翻译 |
-| `c3_examples` | 示例项目代码 |
+| Attributes | Solid, Jump-thru, Persist, Shadow caster |
+| General | Anchor, Pin, Fade, Timer, Tween, Drag & Drop... |
+| Movements | Platform, 8 Direction, Bullet, Physics, Pathfinding... |
+
+</details>
+
+### 特殊集合
+
+| 集合 | 来源 | 内容 |
+|------|------|------|
+| `c3_terms` | `source/zh-CN_R466.csv` | 官方术语翻译 (23,513 条) |
+| `c3_examples` | `../Construct-Example-Projects-main/` | 示例项目代码 (490 个) |
 
 ---
 
