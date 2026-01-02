@@ -10,7 +10,8 @@
     "plugins": "plugins/",
     "behaviors": "behaviors/",
     "effects": "effects/",
-    "editor": "editor/"
+    "editor": "editor/",
+    "features": "features/"
   },
   "stats": {
     "plugins": {
@@ -32,6 +33,9 @@
       "bars": 12,
       "dialogs": 89,
       "views": 4
+    },
+    "features": {
+      "count": 1
     },
     "total_aces": 2911
   }
